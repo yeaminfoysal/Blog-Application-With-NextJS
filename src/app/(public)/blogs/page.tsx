@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import BlogCard from "@/components/modules/Blogs/BlogCard";
+import { Metadata } from "next";
+
+export const metaData: Metadata = {
+  title: "All Blogs | Blog",
+  description: "Hello world"
+};
 
 const AllBlogsPage = async () => {
 
