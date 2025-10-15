@@ -1,17 +1,22 @@
 "use server";
 
+import { authOptions } from "@/helpers/authOptions";
+import { getServerSession } from "next-auth";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 export const create = async (data: FormData) => {
     const blogInfo = Object.fromEntries(data.entries());
+    const session = await getServerSession(authOptions);
+    const userID = session?.user.id
+
     const modifiedData = {
         ...blogInfo,
         tags: blogInfo.tags
             .toString()
             .split(",")
             .map((tag) => tag.trim()),
-        authorId: 1,
+        authorId: userID,
         isFeatured: Boolean(blogInfo.isFeatured),
     };
 
@@ -29,6 +34,8 @@ export const create = async (data: FormData) => {
         revalidateTag("BLOGS");
         revalidatePath("/blogs");
         redirect("/");
+    } else {
+        console.error(result)
     }
     return result;
 };
